@@ -4,7 +4,7 @@ import sys
 from creditcardsystem.logger import loggers
 from decimal import Decimal
 
-loggings = loggers("logger")
+loggings = loggers("Hansangyoon")
 
 class Core(object):
 
@@ -23,14 +23,14 @@ class Core(object):
         if not isinstance(event, str):
             raise ValueError("이벤트 타입은 string 타입이어야 합니다")
 
-        event_type, name, numbers = event.split()
+        # *numbers: 인자의 갯수가 명확하지 않을 때, 가변적 파라미터를 넘겨야 하는 경우 사용.
+        event_type, name, *numbers = event.split()
 
         if not numbers:
             raise Exception(
                 "numbers 구문 분석에서 오류가 발생했습니다. "
                 "이벤트 타입, 이름, 그리고 추가 정보: {0}가 필요합니다. ".format(numbers))
 
-        # numbers에 있던 $ 표시 제
         args = map(self.parse_dollar, numbers)
 
         # 이벤트 타입에 따른 core 함수 호출
@@ -42,7 +42,9 @@ class Core(object):
     def parse_dollar(number):
 
         '''
-        numbers 값에서 dollar 값을 파싱
+        number 값에 어떤 값이 들어올지 모르는 상황에서(카드번호, 또는 한도금액)
+        한도 금액이 들어 올 경우, '$' 표시를 제거하고 반환,
+        카드 번호가 들어올 경우, numeric type인지를 검증 후 반환.
 
         :param number:
         :return:
@@ -199,7 +201,6 @@ class Core(object):
         :param totalStringValueInfo:
         :return:
         '''
-
         sys.stdout.write(totalStringValueInfo)
 
 
